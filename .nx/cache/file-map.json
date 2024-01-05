@@ -107,7 +107,7 @@
       },
       {
         "file": ".nx/cache/file-map.json",
-        "hash": "139287424566796303"
+        "hash": "10866600638523276254"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -119,7 +119,7 @@
       },
       {
         "file": ".nx/cache/project-graph.json",
-        "hash": "11579975155324871304"
+        "hash": "14461401255041457705"
       },
       {
         "file": ".prettierrc",
@@ -155,7 +155,7 @@
       },
       {
         "file": "README.md",
-        "hash": "13689413600497945200"
+        "hash": "8443281560914910497"
       },
       {
         "file": "angular.json",
@@ -164,6 +164,10 @@
       {
         "file": "commitlint.config.js",
         "hash": "11032504357793031842"
+      },
+      {
+        "file": "cover.jpg",
+        "hash": "6982509143087095217"
       },
       {
         "file": "eternal-parent.iml",
@@ -250,6 +254,10 @@
         "hash": "9833889892632193055"
       },
       {
+        "file": "src/app/bookings.store.ts",
+        "hash": "689000916154652595"
+      },
+      {
         "file": "src/app/core/error-handler.service.ts",
         "hash": "13613266026096117192"
       },
@@ -287,7 +295,7 @@
       },
       {
         "file": "src/app/customers/data/customers-store.ts",
-        "hash": "13337707567501173403"
+        "hash": "12680175711616016280"
       },
       {
         "file": "src/app/customers/data/customers.actions.ts",
@@ -327,7 +335,7 @@
       },
       {
         "file": "src/app/customers/feature/components/customers-container.component.ts",
-        "hash": "2429053128608448912"
+        "hash": "6217200249476729010"
       },
       {
         "file": "src/app/customers/feature/components/customers-root/customers-root.component.html",
@@ -363,7 +371,7 @@
       },
       {
         "file": "src/app/customers/ui/customers/customers.component.html",
-        "hash": "8015041850663358942"
+        "hash": "9872613425098205364"
       },
       {
         "file": "src/app/customers/ui/customers/customers.component.ts",

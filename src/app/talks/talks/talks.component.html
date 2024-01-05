@@ -1,0 +1,39 @@
+<h2>Talks</h2>
+
+<div class="my-4">
+  <mat-table [dataSource]="dataSource()">
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.title }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="speakers">
+      <mat-header-cell *matHeaderCellDef> Speaker(s)</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.speakers }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="schedule">
+      <mat-header-cell *matHeaderCellDef> Schedule</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.schedule }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="room">
+      <mat-header-cell *matHeaderCellDef> Room</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.room }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button mat-raised-button>Advance</button>
+        <button mat-raised-button>Postpone</button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      data-testid="row-talk"
+    ></mat-row>
+  </mat-table>
+</div>
