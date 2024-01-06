@@ -1,10 +1,18 @@
 <h2>Talks</h2>
 
+<app-update-info [updateData]="meta()" />
+
+@switch (isPolling()) { @case (false) {
+<button mat-raised-button (click)="togglePolling()">Start Polling</button>
+} @case (true) {
+<button mat-raised-button (click)="togglePolling()">Stop Polling</button>
+} }
+
 <div class="my-4">
   <mat-table [dataSource]="dataSource()">
     <ng-container matColumnDef="title">
       <mat-header-cell *matHeaderCellDef> Title</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.title }} </mat-cell>
+      <mat-cell *matCellDef="let element">{{ element.title }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="speakers">
@@ -23,10 +31,9 @@
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let element">
-        <button mat-raised-button>Advance</button>
-        <button mat-raised-button>Postpone</button>
+        <a mat-raised-button [routerLink]="['.', element.id]">Edit</a>
       </mat-cell>
     </ng-container>
 

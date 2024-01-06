@@ -23,8 +23,9 @@ import {
   loadingInterceptor,
   sharedUiMessagingProvider,
 } from '@app/shared/ui-messaging';
-import { baseUrlInterceptor, errorInterceptor } from '@app/shared/http';
+import { errorInterceptor } from '@app/shared/http';
 import { Configuration } from '@app/shared/config';
+import { talksInterceptor } from '@app/talks-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,9 +34,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes, withComponentInputBinding()),
     provideHttpClient(
       withInterceptors([
-        baseUrlInterceptor,
         loadingInterceptor,
         errorInterceptor,
+        talksInterceptor,
       ]),
       withFetch(),
     ),

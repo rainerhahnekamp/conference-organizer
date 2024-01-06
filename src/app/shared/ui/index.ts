@@ -1,1 +1,1 @@
-export { BlinkerDirective } from './blinker.directive';
+export { UpdateInfoComponent } from './update-info.component';

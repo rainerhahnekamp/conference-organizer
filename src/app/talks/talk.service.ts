@@ -1,22 +1,80 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import {
+  delay,
+  distinctUntilChanged,
+  interval,
+  Observable,
+  of,
+  startWith,
+  Subscription,
+  switchMap,
+} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-interface TalksResponse {
+export interface TalkData {
   talks: Talk[];
-  lastUpdated: Date;
-  lastEditor: string;
+  meta: {
+    lastUpdated: Date;
+    lastEditor: string;
+    lastRefreshed: Date;
+  };
 }
+
+const initialValue = {
+  isPolling: false,
+  talks: [],
+  meta: {
+    lastUpdated: new Date(),
+    lastEditor: '',
+    lastRefreshed: new Date(),
+  },
+};
 
 @Injectable({ providedIn: 'root' })
 export class TalkService {
-  findAll(): Observable<TalksResponse> {
-    return of({
-      talks,
-      lastUpdated: new Date(),
-      lastEditor: 'Rainer Hahnekamp',
-    }).pipe(delay(1000));
+  #talkData = signal<TalkData & { isPolling: boolean }>(initialValue);
+  #httpClient = inject(HttpClient);
+
+  get talkData() {
+    return this.#talkData.asReadonly();
+  }
+
+  #findAll(): Observable<TalkData> {
+    return this.#httpClient.get<TalkData>('/talks');
+  }
+
+  load() {
+    this.#findAll().subscribe((talkData) =>
+      this.#talkData.update((value) => ({ ...value, ...talkData })),
+    );
+  }
+
+  pollingSub: Subscription | undefined;
+
+  togglePolling(intervalInSeconds = 30) {
+    if (this.pollingSub) {
+      this.pollingSub.unsubscribe();
+      this.#talkData.update((value) => ({ ...value, isPolling: false }));
+    } else {
+      this.pollingSub = interval(intervalInSeconds * 3000)
+        .pipe(
+          startWith(true),
+          switchMap(() => this.#findAll()),
+          distinctUntilChanged(
+            (previous, current) =>
+              previous.meta.lastUpdated === current.meta.lastUpdated,
+          ),
+        )
+        .subscribe((talkData) =>
+          this.#talkData.update((value) => ({ ...value, ...talkData })),
+        );
+      this.#talkData.update((value) => ({ ...value, isPolling: true }));
+    }
+  }
+
+  find(id: number): Observable<Talk | undefined> {
+    return of(talks.find((talk) => talk.id === id)).pipe(delay(0));
   }
 }
