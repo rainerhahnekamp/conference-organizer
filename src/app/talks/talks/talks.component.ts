@@ -45,6 +45,7 @@ export class TalksComponent {
 
   meta = computed(() => this.talkData().meta);
   isPolling = computed(() => this.talkData().isPolling);
+  talks = computed(() => this.talkData().talks);
 
   constructor() {
     this.talkService.load();
@@ -64,5 +65,7 @@ export class TalksComponent {
 
   displayedColumns = ['title', 'speakers', 'room', 'schedule', 'actions'];
 
-  togglePolling() {}
+  togglePolling() {
+    this.talkService.togglePolling();
+  }
 }

@@ -78,4 +78,34 @@ This talk is about how it started, and going across the web stack with Analog an
       durationInMinutes: 20,
     },
   },
+  {
+    id: 6,
+    title: 'Cypress Component Testing - The Disappearance of Mr. Button',
+    speakers: 'Younes Jaaidi',
+    abstract: `In the fast but yet peaceful county of Jest, Mr. Button went missing but here comes Detective DOMinic Printer. The investigation begins and questions start raining: Was the change detection triggered? Is it just the wrong selector? Isn’t Mr. Button working in browser-land? By the way, didn’t we introduce a visual regression? While end-to-end testing with Cypress sounds like the natural alternative, it comes with other challenges related to the size of the investigation area.
+
+  Join us on this case, where we will see how Cypress Component Testing bridges the gap between both worlds and helps us narrow the investigation to instantly solve the mystery of the missing Mr. Button.`,
+    room: 'Bolle Festsäle',
+    schedule: {
+      date: new Date(2022, 9, 6),
+      startHour: 11,
+      startMinute: 45,
+      durationInMinutes: 30,
+    },
+  },
+  {
+    id: 7,
+    title: 'NgRx SignalStore - Journey from Vision to First Release\n',
+    speakers: 'Marko Stanimirović',
+    abstract: `NgRx SignalStore offers a pragmatic approach to state management in Angular applications. With its native support for Signals, you can define stores in a clear and declarative manner. The simplicity and flexibility of SignalStore, coupled with its opinionated and modular design, make it a versatile choice for Angular developers.
+
+Join me in this talk to learn more about the journey of developing the NgRx SignalStore, from the initial idea to the first official release. We'll explore its core features and discuss the challenges, design considerations, and key decisions that shaped this state management solution.`,
+    room: 'Austria Trend Hotel',
+    schedule: {
+      date: new Date(2023, 11, 19),
+      startHour: 18,
+      startMinute: 0,
+      durationInMinutes: 30,
+    },
+  },
 ];

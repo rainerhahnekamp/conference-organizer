@@ -12,6 +12,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
 
 export interface TalkData {
   talks: Talk[];
@@ -54,17 +55,18 @@ export class TalkService {
   pollingSub: Subscription | undefined;
 
   togglePolling(intervalInSeconds = 30) {
-    if (this.pollingSub) {
-      this.pollingSub.unsubscribe();
+    if (this.#talkData().isPolling) {
+      this.pollingSub?.unsubscribe();
       this.#talkData.update((value) => ({ ...value, isPolling: false }));
     } else {
-      this.pollingSub = interval(intervalInSeconds * 3000)
+      this.pollingSub = interval(intervalInSeconds * 1000)
         .pipe(
           startWith(true),
           switchMap(() => this.#findAll()),
+          tap(console.info),
           distinctUntilChanged(
             (previous, current) =>
-              previous.meta.lastUpdated === current.meta.lastUpdated,
+              previous.meta.lastRefreshed === current.meta.lastRefreshed,
           ),
         )
         .subscribe((talkData) =>
