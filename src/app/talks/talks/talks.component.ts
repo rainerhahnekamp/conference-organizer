@@ -1,11 +1,9 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { Talk } from '@app/talks/talk';
 import { RouterLink } from '@angular/router';
 import { TalkService } from '@app/talks/talk.service';
 import { UpdateInfoComponent } from '@app/shared/ui';
-import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
 
 /**
  * 1. nested selector with meta

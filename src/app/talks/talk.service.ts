@@ -13,7 +13,6 @@ import {
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { MatTableDataSource } from '@angular/material/table';
 import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
 
 export interface TalkData {
