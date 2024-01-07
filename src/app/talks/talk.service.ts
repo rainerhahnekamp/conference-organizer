@@ -3,7 +3,6 @@ import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
 import {
   delay,
-  distinctUntilChanged,
   interval,
   Observable,
   of,
@@ -12,8 +11,8 @@ import {
   switchMap,
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
 import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
+import { tap } from 'rxjs/operators';
 
 export interface TalkData {
   talks: Talk[];
@@ -52,9 +51,17 @@ export class TalkService {
   }
 
   load() {
-    this.#findAll().subscribe((talkData) =>
-      this.#talkData.update((value) => ({ ...value, ...talkData })),
-    );
+    this.#findAll().subscribe((talkData) => {
+      const { lastUpdated } = this.#talkData().meta;
+      if (lastUpdated !== talkData.meta.lastUpdated) {
+        this.#talkData.update((value) => ({ ...value, ...talkData }));
+      } else {
+        this.#talkData.update((value) => ({
+          ...value,
+          meta: { ...value.meta, lastRefreshed: new Date() },
+        }));
+      }
+    });
   }
 
   talks = computed(() => this.#talkData().talks);
@@ -77,18 +84,8 @@ export class TalkService {
       this.#talkData.update((value) => ({ ...value, isPolling: false }));
     } else {
       this.pollingSub = interval(intervalInSeconds * 1000)
-        .pipe(
-          startWith(true),
-          switchMap(() => this.#findAll()),
-          tap(console.info),
-          distinctUntilChanged(
-            (previous, current) =>
-              previous.meta.lastRefreshed === current.meta.lastRefreshed,
-          ),
-        )
-        .subscribe((talkData) =>
-          this.#talkData.update((value) => ({ ...value, ...talkData })),
-        );
+        .pipe(startWith(true))
+        .subscribe(() => this.load());
       this.#talkData.update((value) => ({ ...value, isPolling: true }));
     }
   }
