@@ -1,9 +1,8 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
 import { delay, interval, Observable, of, startWith, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
 import { TalkStore } from '@app/talks/talk-store';
 import { patchState } from '@ngrx/signals';
 
@@ -26,7 +25,7 @@ export const initialValue: TalkState = {
   meta: {
     lastUpdated: new Date(),
     lastEditor: '',
-    lastRefreshed: new Date(),
+    lastRefreshed: new Date(0),
   },
 };
 
