@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { TalkService } from '@app/talks/talk.service';
 import { UpdateInfoComponent } from '@app/shared/ui';
+import { TalkStore } from '@app/talks/talk-store';
 
 /**
  * 1. nested selector with meta
@@ -29,11 +30,10 @@ type ViewModel = {
 })
 export class TalksComponent {
   talkService = inject(TalkService);
+  talkStore = inject(TalkStore);
 
-  talkData = this.talkService.talkData;
-
-  meta = computed(() => this.talkData().meta);
-  isPolling = computed(() => this.talkData().isPolling);
+  meta = computed(() => this.talkStore.meta());
+  isPolling = computed(() => this.talkStore.isPolling());
   dataSource = computed(
     () => new MatTableDataSource<ViewModel>(this.talkService.dataSource()),
   );

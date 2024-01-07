@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
 import {
@@ -14,6 +14,8 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
+import { TalkStore } from '@app/talks/talk-store';
+import { patchState } from '@ngrx/signals';
 
 export interface TalkData {
   talks: Talk[];
@@ -40,12 +42,8 @@ export const initialValue: TalkState = {
 
 @Injectable({ providedIn: 'root' })
 export class TalkService {
-  #talkData = signal(initialValue);
+  talkStore = inject(TalkStore);
   #httpClient = inject(HttpClient);
-
-  get talkData() {
-    return this.#talkData.asReadonly();
-  }
 
   #findAll(): Observable<TalkData> {
     return this.#httpClient.get<TalkData>('/talks');
@@ -53,14 +51,12 @@ export class TalkService {
 
   load() {
     this.#findAll().subscribe((talkData) =>
-      this.#talkData.update((value) => ({ ...value, ...talkData })),
+      patchState(this.talkStore, talkData),
     );
   }
 
-  talks = computed(() => this.#talkData().talks);
-
   dataSource = computed(() =>
-    this.talks().map((talk) => ({
+    this.talkStore.talks().map((talk) => ({
       id: talk.id,
       title: talk.title,
       speakers: talk.speakers,
@@ -72,9 +68,9 @@ export class TalkService {
   pollingSub: Subscription | undefined;
 
   togglePolling(intervalInSeconds = 30) {
-    if (this.#talkData().isPolling) {
+    if (this.talkStore.isPolling()) {
       this.pollingSub?.unsubscribe();
-      this.#talkData.update((value) => ({ ...value, isPolling: false }));
+      patchState(this.talkStore, { isPolling: false });
     } else {
       this.pollingSub = interval(intervalInSeconds * 1000)
         .pipe(
@@ -86,10 +82,8 @@ export class TalkService {
               previous.meta.lastRefreshed === current.meta.lastRefreshed,
           ),
         )
-        .subscribe((talkData) =>
-          this.#talkData.update((value) => ({ ...value, ...talkData })),
-        );
-      this.#talkData.update((value) => ({ ...value, isPolling: true }));
+        .subscribe((talkData) => patchState(this.talkStore, talkData));
+      patchState(this.talkStore, { isPolling: true });
     }
   }
 
