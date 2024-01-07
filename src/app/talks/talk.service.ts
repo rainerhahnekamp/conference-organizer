@@ -52,16 +52,6 @@ export class TalkService {
     });
   }
 
-  dataSource = computed(() =>
-    this.talkStore.talks().map((talk) => ({
-      id: talk.id,
-      title: talk.title,
-      speakers: talk.speakers,
-      schedule: toPrettySchedule(talk),
-      room: talk.room,
-    })),
-  );
-
   pollingSub: Subscription | undefined;
 
   togglePolling(intervalInSeconds = 30) {
