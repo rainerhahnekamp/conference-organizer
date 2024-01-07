@@ -1,18 +1,8 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
-import {
-  delay,
-  distinctUntilChanged,
-  interval,
-  Observable,
-  of,
-  startWith,
-  Subscription,
-  switchMap,
-} from 'rxjs';
+import { delay, interval, Observable, of, startWith, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
 import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
 import { TalkStore } from '@app/talks/talk-store';
 import { patchState } from '@ngrx/signals';
@@ -50,9 +40,16 @@ export class TalkService {
   }
 
   load() {
-    this.#findAll().subscribe((talkData) =>
-      patchState(this.talkStore, talkData),
-    );
+    this.#findAll().subscribe((talkData) => {
+      const lastUpdated = this.talkStore.meta.lastUpdated();
+      if (lastUpdated !== talkData.meta.lastUpdated) {
+        patchState(this.talkStore, talkData);
+      } else {
+        patchState(this.talkStore, (value) => ({
+          meta: { ...value.meta, lastRefreshed: new Date() },
+        }));
+      }
+    });
   }
 
   dataSource = computed(() =>
@@ -73,16 +70,9 @@ export class TalkService {
       patchState(this.talkStore, { isPolling: false });
     } else {
       this.pollingSub = interval(intervalInSeconds * 1000)
-        .pipe(
-          startWith(true),
-          switchMap(() => this.#findAll()),
-          tap(console.info),
-          distinctUntilChanged(
-            (previous, current) =>
-              previous.meta.lastRefreshed === current.meta.lastRefreshed,
-          ),
-        )
-        .subscribe((talkData) => patchState(this.talkStore, talkData));
+        .pipe(startWith(true))
+        .subscribe(() => this.load());
+
       patchState(this.talkStore, { isPolling: true });
     }
   }

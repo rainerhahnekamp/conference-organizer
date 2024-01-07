@@ -6,14 +6,6 @@ import { TalkService } from '@app/talks/talk.service';
 import { UpdateInfoComponent } from '@app/shared/ui';
 import { TalkStore } from '@app/talks/talk-store';
 
-/**
- * 1. nested selector with meta
- * 2. patchState with selectedId
- * 3. computed with selectediId
- * 4. updateInterval
- * 5. extension local storage
- */
-
 type ViewModel = {
   id: number;
   title: string;
