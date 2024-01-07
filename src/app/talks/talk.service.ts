@@ -1,18 +1,9 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
-import {
-  delay,
-  interval,
-  Observable,
-  of,
-  startWith,
-  Subscription,
-  switchMap,
-} from 'rxjs';
+import { delay, interval, Observable, of, startWith, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
-import { tap } from 'rxjs/operators';
 import { TalkStore } from '@app/talks/talk-store';
 import { patchState } from '@ngrx/signals';
 
@@ -50,12 +41,11 @@ export class TalkService {
 
   load() {
     this.#findAll().subscribe((talkData) => {
-      const { lastUpdated } = this.#talkData().meta;
+      const lastUpdated = this.talkStore.meta.lastUpdated();
       if (lastUpdated !== talkData.meta.lastUpdated) {
-        this.#talkData.update((value) => ({ ...value, ...talkData }));
+        patchState(this.talkStore, talkData);
       } else {
-        this.#talkData.update((value) => ({
-          ...value,
+        patchState(this.talkStore, (value) => ({
           meta: { ...value.meta, lastRefreshed: new Date() },
         }));
       }
@@ -82,7 +72,8 @@ export class TalkService {
       this.pollingSub = interval(intervalInSeconds * 1000)
         .pipe(startWith(true))
         .subscribe(() => this.load());
-      this.#talkData.update((value) => ({ ...value, isPolling: true }));
+
+      patchState(this.talkStore, { isPolling: true });
     }
   }
 
