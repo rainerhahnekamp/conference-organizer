@@ -27,7 +27,7 @@ export interface TalkState extends TalkData {
   isPolling: boolean;
 }
 
-const initialValue: TalkState = {
+export const initialValue: TalkState = {
   isPolling: false,
   talks: [],
   meta: {
