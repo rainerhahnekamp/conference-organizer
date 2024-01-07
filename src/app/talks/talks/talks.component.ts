@@ -5,6 +5,7 @@ import { Talk } from '@app/talks/talk';
 import { RouterLink } from '@angular/router';
 import { TalkService } from '@app/talks/talk.service';
 import { UpdateInfoComponent } from '@app/shared/ui';
+import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
 
 /**
  * 1. nested selector with meta
@@ -21,16 +22,6 @@ type ViewModel = {
   schedule: string;
   room: string;
 };
-
-function toPrettySchedule({ schedule }: Talk) {
-  const start = schedule.date;
-  start.setHours(schedule.startHour);
-  start.setMinutes(schedule.startMinute);
-
-  const end = new Date(start.getTime() + schedule.durationInMinutes * 3600);
-
-  return `${start.toLocaleDateString()}: ${start.toLocaleTimeString()} - ${end.toLocaleTimeString()}`;
-}
 
 @Component({
   selector: 'app-talks',

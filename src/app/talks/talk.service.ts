@@ -23,7 +23,11 @@ export interface TalkData {
   };
 }
 
-const initialValue = {
+export interface TalkState extends TalkData {
+  isPolling: boolean;
+}
+
+const initialValue: TalkState = {
   isPolling: false,
   talks: [],
   meta: {
@@ -35,7 +39,7 @@ const initialValue = {
 
 @Injectable({ providedIn: 'root' })
 export class TalkService {
-  #talkData = signal<TalkData & { isPolling: boolean }>(initialValue);
+  #talkData = signal(initialValue);
   #httpClient = inject(HttpClient);
 
   get talkData() {
