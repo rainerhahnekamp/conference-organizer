@@ -7,7 +7,6 @@ import {
   signal,
 } from '@angular/core';
 import { Talk } from '@app/talks/models';
-import { TalkService } from '@app/talks/talk.service';
 import {
   FormBuilder,
   FormGroup,
@@ -20,6 +19,7 @@ import { RouterLink } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MdEditorComponent } from '@app/shared/form/md-editor.component';
 import { filter } from 'rxjs';
+import { TalkStore } from '@app/talks/talk-store';
 
 const emptyTalk: Talk = {
   id: 0,
@@ -59,7 +59,7 @@ const emptyTalk: Talk = {
 export class TalkDetailComponent implements OnChanges {
   @Input({ transform: numberAttribute }) id!: number;
 
-  talkService = inject(TalkService);
+  talkStore = inject(TalkStore);
   talk = signal<Talk>(emptyTalk);
 
   fb = inject(FormBuilder);
@@ -82,7 +82,7 @@ export class TalkDetailComponent implements OnChanges {
       return;
     }
 
-    this.talkService
+    this.talkStore
       .find(this.id)
       .pipe(filter(Boolean))
       .subscribe((talk) => {
