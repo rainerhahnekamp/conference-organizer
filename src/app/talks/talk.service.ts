@@ -1,15 +1,11 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { Talk } from '@app/talks/models';
 import { computed, inject, Injectable } from '@angular/core';
-import { Talk } from '@app/talks/talk';
+import { Talk, TalkData } from '@app/talks/models';
 import { talks } from '@app/talks/talks.data';
 import { delay, interval, Observable, of, startWith, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
 import { TalkStore } from '@app/talks/talk-store';
 import { patchState } from '@ngrx/signals';
-
-import { initialValue, TalkData } from '@app/talks/models';
 
 @Injectable({ providedIn: 'root' })
 export class TalkService {
