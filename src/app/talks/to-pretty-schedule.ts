@@ -1,4 +1,4 @@
-import { Talk } from '@app/talks/talk';
+import { Talk } from '@app/talks/models';
 
 export function toPrettySchedule({ schedule }: Talk) {
   const start = schedule.date;
