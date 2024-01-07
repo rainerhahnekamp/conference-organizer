@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
 import {
@@ -13,6 +13,8 @@ import {
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { MatTableDataSource } from '@angular/material/table';
+import { toPrettySchedule } from '@app/talks/to-pretty-schedule';
 
 export interface TalkData {
   talks: Talk[];
@@ -55,6 +57,18 @@ export class TalkService {
       this.#talkData.update((value) => ({ ...value, ...talkData })),
     );
   }
+
+  talks = computed(() => this.#talkData().talks);
+
+  dataSource = computed(() =>
+    this.talks().map((talk) => ({
+      id: talk.id,
+      title: talk.title,
+      speakers: talk.speakers,
+      schedule: toPrettySchedule(talk),
+      room: talk.room,
+    })),
+  );
 
   pollingSub: Subscription | undefined;
 

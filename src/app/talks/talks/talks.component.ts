@@ -36,23 +36,13 @@ export class TalksComponent {
 
   meta = computed(() => this.talkData().meta);
   isPolling = computed(() => this.talkData().isPolling);
-  talks = computed(() => this.talkData().talks);
+  dataSource = computed(
+    () => new MatTableDataSource<ViewModel>(this.talkService.dataSource()),
+  );
 
   constructor() {
     this.talkService.load();
   }
-
-  dataSource = computed(() => {
-    return new MatTableDataSource<ViewModel>(
-      this.talkData().talks.map((talk) => ({
-        id: talk.id,
-        title: talk.title,
-        speakers: talk.speakers,
-        schedule: toPrettySchedule(talk),
-        room: talk.room,
-      })),
-    );
-  });
 
   displayedColumns = ['title', 'speakers', 'room', 'schedule', 'actions'];
 
