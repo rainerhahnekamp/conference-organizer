@@ -35,7 +35,7 @@ export class TalksComponent {
   meta = computed(() => this.talkStore.meta());
   isPolling = computed(() => this.talkStore.isPolling());
   dataSource = computed(
-    () => new MatTableDataSource<ViewModel>(this.talkService.dataSource()),
+    () => new MatTableDataSource<ViewModel>(this.talkStore.dataSource()),
   );
 
   constructor() {
