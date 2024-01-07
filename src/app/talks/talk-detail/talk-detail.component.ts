@@ -6,7 +6,7 @@ import {
   OnChanges,
   signal,
 } from '@angular/core';
-import { Talk } from '@app/talks/talk';
+import { Talk } from '@app/talks/models';
 import { TalkService } from '@app/talks/talk.service';
 import {
   FormBuilder,

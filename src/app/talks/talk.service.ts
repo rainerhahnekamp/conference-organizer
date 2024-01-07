@@ -1,3 +1,5 @@
+import { computed, inject, Injectable } from '@angular/core';
+import { Talk, TalkData } from '@app/talks/models';
 import { inject, Injectable } from '@angular/core';
 import { Talk } from '@app/talks/talk';
 import { talks } from '@app/talks/talks.data';
@@ -5,29 +7,6 @@ import { delay, interval, Observable, of, startWith, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { TalkStore } from '@app/talks/talk-store';
 import { patchState } from '@ngrx/signals';
-
-export interface TalkData {
-  talks: Talk[];
-  meta: {
-    lastUpdated: Date;
-    lastEditor: string;
-    lastRefreshed: Date;
-  };
-}
-
-export interface TalkState extends TalkData {
-  isPolling: boolean;
-}
-
-export const initialValue: TalkState = {
-  isPolling: false,
-  talks: [],
-  meta: {
-    lastUpdated: new Date(),
-    lastEditor: '',
-    lastRefreshed: new Date(0),
-  },
-};
 
 @Injectable({ providedIn: 'root' })
 export class TalkService {
