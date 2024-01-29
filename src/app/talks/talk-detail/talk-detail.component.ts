@@ -1,10 +1,9 @@
 import {
   Component,
+  effect,
   inject,
-  Input,
+  input,
   numberAttribute,
-  OnChanges,
-  signal,
 } from '@angular/core';
 import { Talk } from '@app/talks/models';
 import {
@@ -18,7 +17,6 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MdEditorComponent } from '@app/shared/form/md-editor.component';
-import { filter } from 'rxjs';
 import { TalkStore } from '@app/talks/talk-store';
 
 const emptyTalk: Talk = {
@@ -56,11 +54,10 @@ const emptyTalk: Talk = {
     MdEditorComponent,
   ],
 })
-export class TalkDetailComponent implements OnChanges {
-  @Input({ transform: numberAttribute }) id!: number;
+export class TalkDetailComponent {
+  id = input.required({ transform: numberAttribute });
 
   talkStore = inject(TalkStore);
-  talk = signal<Talk>(emptyTalk);
 
   fb = inject(FormBuilder);
   formGroup = this.fb.nonNullable.group({
@@ -77,18 +74,14 @@ export class TalkDetailComponent implements OnChanges {
     }),
   });
 
-  ngOnChanges() {
-    if (!this.id) {
-      return;
-    }
-
-    this.talkStore
-      .find(this.id)
-      .pipe(filter(Boolean))
-      .subscribe((talk) => {
-        this.talk.set(talk);
+  constructor() {
+    this.talkStore.find(this.id);
+    effect(() => {
+      const talk = this.talkStore.selectedTalk();
+      if (talk) {
         this.formGroup.setValue(talk);
-      });
+      }
+    });
   }
 
   get schedule() {
@@ -96,6 +89,6 @@ export class TalkDetailComponent implements OnChanges {
   }
 
   submit() {
-    this.talk.update(() => this.formGroup.getRawValue());
+    this.talkStore.update(this.formGroup.getRawValue());
   }
 }

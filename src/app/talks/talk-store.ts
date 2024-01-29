@@ -17,7 +17,6 @@ import {
   of,
   pipe,
   startWith,
-  Subscription,
   switchMap,
   Unsubscribable,
 } from 'rxjs';
@@ -39,6 +38,12 @@ export const TalkStore = signalStore(
           room: talk.room,
         })),
       ),
+      selectedTalk: computed(() => {
+        const selectedId = store.selectedId();
+        const talks = store.talks();
+
+        return talks.find((talk) => talk.id === selectedId);
+      }),
     };
   }),
   withMethods((store) => {
@@ -82,8 +87,14 @@ export const TalkStore = signalStore(
         }
       },
 
-      find(id: number): Observable<Talk | undefined> {
-        return of(talks.find((talk) => talk.id === id)).pipe(delay(0));
+      find: rxMethod<number>(
+        pipe(tap((selectedId) => patchState(store, { selectedId }))),
+      ),
+
+      update(talk: Talk) {
+        patchState(store, ({ talks }) => ({
+          talks: talks.map((entity) => (entity.id === talk.id ? talk : entity)),
+        }));
       },
     };
   }),

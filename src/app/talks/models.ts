@@ -14,6 +14,7 @@ export interface Talk {
 
 export interface TalkData {
   talks: Talk[];
+  selectedId: number;
   meta: {
     lastUpdated: Date;
     lastEditor: string;
@@ -27,6 +28,7 @@ export interface TalkState extends TalkData {
 
 export const initialValue: TalkState = {
   isPolling: false,
+  selectedId: 0,
   talks: [],
   meta: {
     lastUpdated: new Date(),
